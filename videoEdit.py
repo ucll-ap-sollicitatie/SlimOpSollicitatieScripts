@@ -30,6 +30,10 @@ out = cv2.VideoWriter('output.mp4', -1, 20.0, (640, 480))
 fps = cap.get(cv2.CAP_PROP_FPS)
 frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 n_frames = 0
+startTime = 0
+endTime = [1, 2]
+timeCounter = 0
+textOnScreen = ["TEXT 1", "TEXT 2"]
 
 
 while True:
@@ -37,16 +41,13 @@ while True:
     n_frames += 1
     duration = n_frames / float(fps)
     font = cv2.FONT_HERSHEY_PLAIN
-    if 0 <= duration < 1:
-        cv2.putText(frame, "YEET", (50, 50), font, 1, (0, 255, 255), 2, cv2.LINE_4)
+    if startTime - 1 <= duration <= endTime[timeCounter]:
+        cv2.putText(frame, textOnScreen[timeCounter], (50, 50), font, 1, (0, 255, 255), 2, cv2.LINE_4)
         out.write(frame)
         cv2.imshow('video', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    if 1 <= duration < 2:
-        cv2.putText(frame, "MINDER YEET", (50, 50), font, 1, (0, 255, 255), 2, cv2.LINE_4)
-        out.write(frame)
-        cv2.imshow('video', frame)
+        if duration == endTime[timeCounter]:
+            startTime = endTime[timeCounter]
+            timeCounter += 1
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     if duration == float(frame_count)/ float(fps):
